@@ -3,13 +3,13 @@
 <head>
 
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+/>
 
 <title>Ponto Mobile</title>
-
-<meta name="theme-color" content="#0f172a"/>
-
-<link rel="manifest" href="manifest.json">
 
 <style>
 
@@ -25,101 +25,122 @@ body{
   color:#f8fafc;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   min-height:100vh;
+  padding-bottom:120px;
 }
 
 header{
-  padding:22px 20px;
-  background:rgba(15,23,42,.95);
   position:sticky;
   top:0;
-  z-index:100;
+  z-index:999;
+  background:rgba(2,6,23,.96);
+  backdrop-filter:blur(12px);
   border-bottom:1px solid #1e293b;
-  backdrop-filter:blur(10px);
+  padding:24px 20px;
 }
 
 header h1{
-  font-size:24px;
-  font-weight:700;
   color:#38bdf8;
+  font-size:30px;
+  font-weight:800;
 }
 
 header p{
-  margin-top:5px;
+  margin-top:6px;
   color:#94a3b8;
-  font-size:14px;
+  font-size:15px;
 }
 
 .container{
   padding:18px;
-  padding-bottom:120px;
 }
 
 .card{
   background:#0f172a;
   border:1px solid #1e293b;
-  border-radius:22px;
-  padding:18px;
-  margin-bottom:18px;
-  box-shadow:0 10px 30px rgba(0,0,0,.4);
+  border-radius:28px;
+  padding:22px;
+  margin-bottom:24px;
+  box-shadow:0 20px 40px rgba(0,0,0,.45);
 }
 
 .date{
-  font-size:18px;
-  font-weight:700;
-  margin-bottom:18px;
   color:#38bdf8;
+  font-size:30px;
+  font-weight:800;
+  margin-bottom:22px;
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
+.time-grid{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
 }
 
-.box{
+.time-card{
   background:#111827;
   border:1px solid #1e293b;
-  border-radius:18px;
-  padding:14px;
+  border-radius:24px;
+  padding:18px;
 }
 
-.box label{
+.time-card label{
   display:block;
-  margin-bottom:8px;
-  font-size:13px;
   color:#94a3b8;
+  margin-bottom:12px;
+  font-size:15px;
 }
 
-.box input[type="time"]{
+.time-card input[type="time"]{
   width:100%;
+  height:65px;
+  border:none;
+  border-radius:18px;
   background:#020617;
-  border:1px solid #334155;
-  border-radius:14px;
   color:white;
-  padding:14px;
-  font-size:18px;
+  padding:0 18px;
+  font-size:28px;
+  font-weight:700;
+  outline:none;
+  border:2px solid #1e293b;
 }
 
-.photo-area{
+.photo-box{
   margin-top:16px;
-  background:#111827;
   border:2px dashed #334155;
-  border-radius:18px;
+  border-radius:20px;
   padding:18px;
   text-align:center;
+  background:#0b1220;
 }
 
-.photo-area input{
-  margin-top:12px;
+.photo-box small{
+  display:block;
+  margin-bottom:12px;
+  color:#94a3b8;
+  font-size:13px;
+}
+
+.photo-box input{
   width:100%;
+  color:#cbd5e1;
+}
+
+.preview{
+  margin-top:14px;
 }
 
 .preview img{
   width:100%;
-  max-height:220px;
-  object-fit:cover;
   border-radius:18px;
-  margin-top:14px;
+  max-height:240px;
+  object-fit:cover;
+  border:2px solid #1e293b;
+}
+
+.status{
+  margin-top:10px;
+  color:#10b981;
+  font-size:13px;
 }
 
 .actions{
@@ -127,53 +148,38 @@ header p{
   bottom:0;
   left:0;
   width:100%;
-  background:#0f172a;
+  background:rgba(15,23,42,.98);
   border-top:1px solid #1e293b;
   padding:14px;
   display:flex;
-  gap:10px;
+  gap:12px;
+  backdrop-filter:blur(12px);
 }
 
 button{
   flex:1;
+  height:58px;
   border:none;
-  border-radius:18px;
-  padding:16px;
-  font-size:15px;
-  font-weight:700;
+  border-radius:20px;
   color:white;
+  font-size:18px;
+  font-weight:800;
 }
 
-.primary{
+.csv{
   background:#0284c7;
 }
 
-.secondary{
+.pdf{
   background:#334155;
 }
 
-.danger{
+.clear{
   background:#dc2626;
 }
 
 button:active{
-  transform:scale(.98);
-}
-
-.status{
-  margin-top:8px;
-  color:#10b981;
-  font-size:13px;
-}
-
-.install{
-  margin-top:12px;
-  display:none;
-}
-
-.install button{
-  width:100%;
-  background:#10b981;
+  transform:scale(.97);
 }
 
 @media(min-width:900px){
@@ -186,6 +192,7 @@ button:active{
 }
 
 </style>
+
 </head>
 
 <body>
@@ -198,29 +205,21 @@ button:active{
 27/05/2026 até 09/06/2026
 </p>
 
-<div class="install" id="installBox">
-
-<button onclick="instalarApp()">
-Instalar App
-</button>
-
-</div>
-
 </header>
 
 <div class="container" id="container"></div>
 
 <div class="actions">
 
-<button class="primary" onclick="exportarCSV()">
+<button class="csv" onclick="exportarCSV()">
 CSV
 </button>
 
-<button class="secondary" onclick="window.print()">
+<button class="pdf" onclick="window.print()">
 PDF
 </button>
 
-<button class="danger" onclick="limparTudo()">
+<button class="clear" onclick="limparTudo()">
 Limpar
 </button>
 
@@ -242,66 +241,71 @@ const DIAS = [
 ];
 
 const CAMPOS = [
+
 {
 id:"entrada",
 nome:"Entrada"
 },
+
 {
 id:"saida",
 nome:"Saída almoço"
 },
+
 {
 id:"volta",
 nome:"Volta almoço"
 },
+
 {
 id:"fim",
 nome:"Encerramento"
 }
+
 ];
 
-function formatarData(dataISO){
+function formatarData(data){
 
-const [ano, mes, dia] = dataISO.split("-");
+const [ano, mes, dia] = data.split("-");
 
 return `${dia}/${mes}/${ano}`;
 
 }
 
-function chave(tipo, data){
+function chave(tipo,data){
 
 return `ponto_${tipo}_${data}`;
 
 }
 
-function salvar(campo, data, valor){
+function salvar(campo,data,valor){
 
 localStorage.setItem(
 chave(campo,data),
 valor
 );
 
-mostrarStatus(data);
+mostrarStatus(data,campo);
 
 }
 
-function mostrarStatus(data){
+function mostrarStatus(data,campo){
 
 const el = document.getElementById(
-`status_${data}`
+`status_${campo}_${data}`
 );
 
-el.innerText = "Salvo automaticamente";
+el.innerText = "Salvo";
 
 setTimeout(()=>{
 
 el.innerText = "";
 
-},2000);
+},1500);
 
 }
 
-function salvarFoto(data,input){
+function salvarFoto(data,campo,input){
 
 const file = input.files[0];
 
@@ -312,16 +316,16 @@ const reader = new FileReader();
 reader.onload = function(e){
 
 localStorage.setItem(
-chave("foto",data),
+chave(`foto_${campo}`,data),
 e.target.result
 );
 
 document.getElementById(
-`preview_${data}`
+`preview_${campo}_${data}`
 ).innerHTML =
 `<img src="${e.target.result}" />`;
 
-mostrarStatus(data);
+mostrarStatus(data,campo);
 
 };
 
@@ -348,7 +352,7 @@ let html = `
 ${formatarData(data)}
 </div>
 
-<div class="grid">
+<div class="time-grid">
 `;
 
 CAMPOS.forEach(campo=>{
@@ -358,8 +362,14 @@ localStorage.getItem(
 chave(campo.id,data)
 ) || "";
 
+const foto =
+localStorage.getItem(
+chave(`foto_${campo.id}`,data)
+);
+
 html += `
-<div class="box">
+
+<div class="time-card">
 
 <label>
 ${campo.nome}
@@ -377,19 +387,11 @@ this.value
 "
 />
 
-</div>
-`;
+<div class="photo-box">
 
-});
-
-html += `
-</div>
-
-<div class="photo-area">
-
-<div>
-Foto do ponto
-</div>
+<small>
+Foto do ${campo.nome.toLowerCase()}
+</small>
 
 <input
 type="file"
@@ -398,6 +400,7 @@ capture="environment"
 onchange="
 salvarFoto(
 '${data}',
+'${campo.id}',
 this
 )
 "
@@ -405,31 +408,25 @@ this
 
 <div
 class="preview"
-id="preview_${data}"
+id="preview_${campo.id}_${data}"
 >
-${
-localStorage.getItem(
-chave("foto",data)
-)
-?
-`<img src="${
-localStorage.getItem(
-chave("foto",data)
-)
-}" />`
-:
-""
-}
+${foto ? `<img src="${foto}" />` : ""}
 </div>
 
 <div
 class="status"
-id="status_${data}"
+id="status_${campo.id}_${data}"
 >
 </div>
 
 </div>
+
+</div>
 `;
+
+});
+
+html += `</div>`;
 
 card.innerHTML = html;
 
@@ -508,7 +505,7 @@ URL.revokeObjectURL(url);
 function limparTudo(){
 
 const ok = confirm(
-"Apagar todos os dados?"
+"Deseja apagar tudo?"
 );
 
 if(!ok) return;
@@ -516,42 +513,6 @@ if(!ok) return;
 localStorage.clear();
 
 carregar();
-
-}
-
-let deferredPrompt;
-
-window.addEventListener(
-"beforeinstallprompt",
-(e)=>{
-
-e.preventDefault();
-
-deferredPrompt = e;
-
-document.getElementById(
-"installBox"
-).style.display = "block";
-
-}
-);
-
-async function instalarApp(){
-
-if(!deferredPrompt) return;
-
-deferredPrompt.prompt();
-
-const result =
-await deferredPrompt.userChoice;
-
-if(result.outcome === "accepted"){
-
-document.getElementById(
-"installBox"
-).style.display = "none";
-
-}
 
 }
 
