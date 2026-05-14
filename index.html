@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Controle de Ponto - Dark Mode</title>
+
+  <style>
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:#0f172a;
+      color:#f1f5f9;
+    }
+
+    header{
+      background:#111827;
+      border-bottom:1px solid #1e293b;
+      padding:24px;
+      text-align:center;
+    }
+
+    header h1{
+      margin:0;
+      font-size:28px;
+      color:#38bdf8;
+    }
+
+    header p{
+      margin-top:8px;
+      color:#94a3b8;
+    }
+
+    main{
+      max-width:1100px;
+      margin:24px auto;
+      padding:0 16px 40px;
+    }
+
+    .card{
+      background:#111827;
+      border:1px solid #1e293b;
+      border-radius:18px;
+      padding:20px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.35);
+      overflow-x:auto;
+    }
+
+    .actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    button{
+      border:none;
+      border-radius:10px;
+      padding:12px 16px;
+      font-weight:bold;
+      cursor:pointer;
+      transition:0.2s;
+      color:white;
+    }
+
+    button:hover{
+      transform:translateY(-1px);
+      opacity:0.95;
+    }
+
+    .primary{
+      background:#0284c7;
+    }
+
+    .secondary{
+      background:#475569;
+    }
+
+    .danger{
+      background:#dc2626;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:850px;
+    }
+
+    th{
+      background:#0f172a;
+      color:#38bdf8;
+      border-bottom:1px solid #1e293b;
+      padding:14px;
+      text-align:center;
+    }
+
+    td{
+      padding:14px;
+      border-bottom:1px solid #1e293b;
+      text-align:center;
+    }
+
+    td:first-child,
+    th:first-child{
+      text-align:left;
+      font-weight:bold;
+    }
+
+    input[type="time"]{
+      background:#0f172a;
+      border:1px solid #334155;
+      color:#f8fafc;
+      padding:10px;
+      border-radius:10px;
+      width:120px;
+    }
+
+    input[type="file"]{
+      color:#cbd5e1;
+      max-width:170px;
+      font-size:12px;
+    }
+
+    .preview img{
+      width:70px;
+      height:70px;
+      object-fit:cover;
+      border-radius:10px;
+      margin-top:8px;
+      border:2px solid #334155;
+    }
+
+    .note{
+      margin-top:18px;
+      color:#94a3b8;
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    ::-webkit-scrollbar{
+      height:10px;
+      width:10px;
+    }
+
+    ::-webkit-scrollbar-thumb{
+      background:#334155;
+      border-radius:20px;
+    }
+
+    @media(max-width:700px){
+
+      header h1{
+        font-size:24px;
+      }
+
+      table{
+        min-width:720px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Controle de Ponto</h1>
+  <p>27/05/2026 até 09/06/2026 • Segunda a Sexta</p>
+</header>
+
+<main>
+
+  <section class="card">
+
+    <div class="actions">
+
+      <button class="primary" onclick="exportarCSV()">
+        Exportar CSV
+      </button>
+
+      <button class="secondary" onclick="window.print()">
+        Imprimir / PDF
+      </button>
+
+      <button class="danger" onclick="limparDados()">
+        Limpar Dados
+      </button>
+
+    </div>
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Entrada</th>
+          <th>Saída almoço</th>
+          <th>Volta almoço</th>
+          <th>Encerramento</th>
+          <th>Foto</th>
+        </tr>
+      </thead>
+
+      <tbody id="tabela"></tbody>
+
+    </table>
+
+    <p class="note">
+      Os dados ficam salvos automaticamente no navegador usando localStorage.
+    </p>
+
+  </section>
+
+</main>
+
+<script>
+
+const DIAS = [
+  "2026-05-27",
+  "2026-05-28",
+  "2026-05-29",
+  "2026-06-01",
+  "2026-06-02",
+  "2026-06-03",
+  "2026-06-04",
+  "2026-06-05",
+  "2026-06-08",
+  "2026-06-09"
+];
+
+const CAMPOS = [
+  "entrada",
+  "saidaAlmoco",
+  "voltaAlmoco",
+  "encerramento"
+];
+
+function formatarData(dataISO){
+
+  const [ano, mes, dia] = dataISO.split("-");
+
+  return `${dia}/${mes}/${ano}`;
+
+}
+
+function chave(campo, dataISO){
+
+  return `ponto_${campo}_${dataISO}`;
+
+}
+
+function salvarCampo(campo, dataISO, valor){
+
+  localStorage.setItem(
+    chave(campo, dataISO),
+    valor
+  );
+
+}
+
+function salvarFoto(dataISO, input){
+
+  const arquivo = input.files[0];
+
+  if(!arquivo) return;
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e){
+
+    localStorage.setItem(
+      chave("foto", dataISO),
+      e.target.result
+    );
+
+    document.getElementById(
+      `preview_${dataISO}`
+    ).innerHTML =
+      `<img src="${e.target.result}" />`;
+
+  };
+
+  leitor.readAsDataURL(arquivo);
+
+}
+
+function carregarTabela(){
+
+  const tabela = document.getElementById("tabela");
+
+  tabela.innerHTML = "";
+
+  DIAS.forEach(dataISO => {
+
+    const tr = document.createElement("tr");
+
+    let html = `
+      <td>${formatarData(dataISO)}</td>
+    `;
+
+    CAMPOS.forEach(campo => {
+
+      const valor =
+        localStorage.getItem(
+          chave(campo, dataISO)
+        ) || "";
+
+      html += `
+        <td>
+
+          <input
+            type="time"
+            value="${valor}"
+            onchange="
+              salvarCampo(
+                '${campo}',
+                '${dataISO}',
+                this.value
+              )
+            "
+          />
+
+        </td>
+      `;
+
+    });
+
+    const foto =
+      localStorage.getItem(
+        chave("foto", dataISO)
+      );
+
+    html += `
+      <td>
+
+        <input
+          type="file"
+          accept="image/*"
+          onchange="
+            salvarFoto(
+              '${dataISO}',
+              this
+            )
+          "
+        />
+
+        <div
+          class="preview"
+          id="preview_${dataISO}"
+        >
+          ${foto ? `<img src="${foto}" />` : ""}
+        </div>
+
+      </td>
+    `;
+
+    tr.innerHTML = html;
+
+    tabela.appendChild(tr);
+
+  });
+
+}
+
+function exportarCSV(){
+
+  let linhas = [];
+
+  linhas.push([
+    "Data",
+    "Entrada",
+    "Saida Almoco",
+    "Volta Almoco",
+    "Encerramento",
+    "Foto"
+  ]);
+
+  DIAS.forEach(dataISO => {
+
+    linhas.push([
+
+      formatarData(dataISO),
+
+      localStorage.getItem(
+        chave("entrada", dataISO)
+      ) || "",
+
+      localStorage.getItem(
+        chave("saidaAlmoco", dataISO)
+      ) || "",
+
+      localStorage.getItem(
+        chave("voltaAlmoco", dataISO)
+      ) || "",
+
+      localStorage.getItem(
+        chave("encerramento", dataISO)
+      ) || "",
+
+      localStorage.getItem(
+        chave("foto", dataISO)
+      ) ? "Sim" : "Não"
+
+    ]);
+
+  });
+
+  const csv = linhas
+    .map(l => l.join(";"))
+    .join("\n");
+
+  const blob = new Blob(
+    [csv],
+    { type:"text/csv;charset=utf-8;" }
+  );
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const link =
+    document.createElement("a");
+
+  link.href = url;
+
+  link.download =
+    "controle-ponto-dark.csv";
+
+  link.click();
+
+  URL.revokeObjectURL(url);
+
+}
+
+function limparDados(){
+
+  const confirmar = confirm(
+    "Deseja apagar todos os dados?"
+  );
+
+  if(!confirmar) return;
+
+  DIAS.forEach(dataISO => {
+
+    CAMPOS.forEach(campo => {
+
+      localStorage.removeItem(
+        chave(campo, dataISO)
+      );
+
+    });
+
+    localStorage.removeItem(
+      chave("foto", dataISO)
+    );
+
+  });
+
+  carregarTabela();
+
+}
+
+carregarTabela();
+
+</script>
+
+</body>
+</html>
