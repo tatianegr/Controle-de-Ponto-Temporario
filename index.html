@@ -1,471 +1,561 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Controle de Ponto - Dark Mode</title>
 
-  <style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
-    *{
-      box-sizing:border-box;
-    }
+<title>Ponto Mobile</title>
 
-    body{
-      margin:0;
-      font-family:Arial, Helvetica, sans-serif;
-      background:#0f172a;
-      color:#f1f5f9;
-    }
+<meta name="theme-color" content="#0f172a"/>
 
-    header{
-      background:#111827;
-      border-bottom:1px solid #1e293b;
-      padding:24px;
-      text-align:center;
-    }
+<link rel="manifest" href="manifest.json">
 
-    header h1{
-      margin:0;
-      font-size:28px;
-      color:#38bdf8;
-    }
+<style>
 
-    header p{
-      margin-top:8px;
-      color:#94a3b8;
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
-    main{
-      max-width:1100px;
-      margin:24px auto;
-      padding:0 16px 40px;
-    }
+body{
+  background:#020617;
+  color:#f8fafc;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  min-height:100vh;
+}
 
-    .card{
-      background:#111827;
-      border:1px solid #1e293b;
-      border-radius:18px;
-      padding:20px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.35);
-      overflow-x:auto;
-    }
+header{
+  padding:22px 20px;
+  background:rgba(15,23,42,.95);
+  position:sticky;
+  top:0;
+  z-index:100;
+  border-bottom:1px solid #1e293b;
+  backdrop-filter:blur(10px);
+}
 
-    .actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:18px;
-    }
+header h1{
+  font-size:24px;
+  font-weight:700;
+  color:#38bdf8;
+}
 
-    button{
-      border:none;
-      border-radius:10px;
-      padding:12px 16px;
-      font-weight:bold;
-      cursor:pointer;
-      transition:0.2s;
-      color:white;
-    }
+header p{
+  margin-top:5px;
+  color:#94a3b8;
+  font-size:14px;
+}
 
-    button:hover{
-      transform:translateY(-1px);
-      opacity:0.95;
-    }
+.container{
+  padding:18px;
+  padding-bottom:120px;
+}
 
-    .primary{
-      background:#0284c7;
-    }
+.card{
+  background:#0f172a;
+  border:1px solid #1e293b;
+  border-radius:22px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
 
-    .secondary{
-      background:#475569;
-    }
+.date{
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:18px;
+  color:#38bdf8;
+}
 
-    .danger{
-      background:#dc2626;
-    }
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-      min-width:850px;
-    }
+.box{
+  background:#111827;
+  border:1px solid #1e293b;
+  border-radius:18px;
+  padding:14px;
+}
 
-    th{
-      background:#0f172a;
-      color:#38bdf8;
-      border-bottom:1px solid #1e293b;
-      padding:14px;
-      text-align:center;
-    }
+.box label{
+  display:block;
+  margin-bottom:8px;
+  font-size:13px;
+  color:#94a3b8;
+}
 
-    td{
-      padding:14px;
-      border-bottom:1px solid #1e293b;
-      text-align:center;
-    }
+.box input[type="time"]{
+  width:100%;
+  background:#020617;
+  border:1px solid #334155;
+  border-radius:14px;
+  color:white;
+  padding:14px;
+  font-size:18px;
+}
 
-    td:first-child,
-    th:first-child{
-      text-align:left;
-      font-weight:bold;
-    }
+.photo-area{
+  margin-top:16px;
+  background:#111827;
+  border:2px dashed #334155;
+  border-radius:18px;
+  padding:18px;
+  text-align:center;
+}
 
-    input[type="time"]{
-      background:#0f172a;
-      border:1px solid #334155;
-      color:#f8fafc;
-      padding:10px;
-      border-radius:10px;
-      width:120px;
-    }
+.photo-area input{
+  margin-top:12px;
+  width:100%;
+}
 
-    input[type="file"]{
-      color:#cbd5e1;
-      max-width:170px;
-      font-size:12px;
-    }
+.preview img{
+  width:100%;
+  max-height:220px;
+  object-fit:cover;
+  border-radius:18px;
+  margin-top:14px;
+}
 
-    .preview img{
-      width:70px;
-      height:70px;
-      object-fit:cover;
-      border-radius:10px;
-      margin-top:8px;
-      border:2px solid #334155;
-    }
+.actions{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:#0f172a;
+  border-top:1px solid #1e293b;
+  padding:14px;
+  display:flex;
+  gap:10px;
+}
 
-    .note{
-      margin-top:18px;
-      color:#94a3b8;
-      font-size:13px;
-      line-height:1.5;
-    }
+button{
+  flex:1;
+  border:none;
+  border-radius:18px;
+  padding:16px;
+  font-size:15px;
+  font-weight:700;
+  color:white;
+}
 
-    ::-webkit-scrollbar{
-      height:10px;
-      width:10px;
-    }
+.primary{
+  background:#0284c7;
+}
 
-    ::-webkit-scrollbar-thumb{
-      background:#334155;
-      border-radius:20px;
-    }
+.secondary{
+  background:#334155;
+}
 
-    @media(max-width:700px){
+.danger{
+  background:#dc2626;
+}
 
-      header h1{
-        font-size:24px;
-      }
+button:active{
+  transform:scale(.98);
+}
 
-      table{
-        min-width:720px;
-      }
+.status{
+  margin-top:8px;
+  color:#10b981;
+  font-size:13px;
+}
 
-    }
+.install{
+  margin-top:12px;
+  display:none;
+}
 
-  </style>
+.install button{
+  width:100%;
+  background:#10b981;
+}
+
+@media(min-width:900px){
+
+  .container{
+    max-width:700px;
+    margin:auto;
+  }
+
+}
+
+</style>
 </head>
 
 <body>
 
 <header>
-  <h1>Controle de Ponto</h1>
-  <p>27/05/2026 até 09/06/2026 • Segunda a Sexta</p>
+
+<h1>Ponto Mobile</h1>
+
+<p>
+27/05/2026 até 09/06/2026
+</p>
+
+<div class="install" id="installBox">
+
+<button onclick="instalarApp()">
+Instalar App
+</button>
+
+</div>
+
 </header>
 
-<main>
+<div class="container" id="container"></div>
 
-  <section class="card">
+<div class="actions">
 
-    <div class="actions">
+<button class="primary" onclick="exportarCSV()">
+CSV
+</button>
 
-      <button class="primary" onclick="exportarCSV()">
-        Exportar CSV
-      </button>
+<button class="secondary" onclick="window.print()">
+PDF
+</button>
 
-      <button class="secondary" onclick="window.print()">
-        Imprimir / PDF
-      </button>
+<button class="danger" onclick="limparTudo()">
+Limpar
+</button>
 
-      <button class="danger" onclick="limparDados()">
-        Limpar Dados
-      </button>
-
-    </div>
-
-    <table>
-
-      <thead>
-        <tr>
-          <th>Data</th>
-          <th>Entrada</th>
-          <th>Saída almoço</th>
-          <th>Volta almoço</th>
-          <th>Encerramento</th>
-          <th>Foto</th>
-        </tr>
-      </thead>
-
-      <tbody id="tabela"></tbody>
-
-    </table>
-
-    <p class="note">
-      Os dados ficam salvos automaticamente no navegador usando localStorage.
-    </p>
-
-  </section>
-
-</main>
+</div>
 
 <script>
 
 const DIAS = [
-  "2026-05-27",
-  "2026-05-28",
-  "2026-05-29",
-  "2026-06-01",
-  "2026-06-02",
-  "2026-06-03",
-  "2026-06-04",
-  "2026-06-05",
-  "2026-06-08",
-  "2026-06-09"
+"2026-05-27",
+"2026-05-28",
+"2026-05-29",
+"2026-06-01",
+"2026-06-02",
+"2026-06-03",
+"2026-06-04",
+"2026-06-05",
+"2026-06-08",
+"2026-06-09"
 ];
 
 const CAMPOS = [
-  "entrada",
-  "saidaAlmoco",
-  "voltaAlmoco",
-  "encerramento"
+{
+id:"entrada",
+nome:"Entrada"
+},
+{
+id:"saida",
+nome:"Saída almoço"
+},
+{
+id:"volta",
+nome:"Volta almoço"
+},
+{
+id:"fim",
+nome:"Encerramento"
+}
 ];
 
 function formatarData(dataISO){
 
-  const [ano, mes, dia] = dataISO.split("-");
+const [ano, mes, dia] = dataISO.split("-");
 
-  return `${dia}/${mes}/${ano}`;
-
-}
-
-function chave(campo, dataISO){
-
-  return `ponto_${campo}_${dataISO}`;
+return `${dia}/${mes}/${ano}`;
 
 }
 
-function salvarCampo(campo, dataISO, valor){
+function chave(tipo, data){
 
-  localStorage.setItem(
-    chave(campo, dataISO),
-    valor
-  );
+return `ponto_${tipo}_${data}`;
 
 }
 
-function salvarFoto(dataISO, input){
+function salvar(campo, data, valor){
 
-  const arquivo = input.files[0];
+localStorage.setItem(
+chave(campo,data),
+valor
+);
 
-  if(!arquivo) return;
-
-  const leitor = new FileReader();
-
-  leitor.onload = function(e){
-
-    localStorage.setItem(
-      chave("foto", dataISO),
-      e.target.result
-    );
-
-    document.getElementById(
-      `preview_${dataISO}`
-    ).innerHTML =
-      `<img src="${e.target.result}" />`;
-
-  };
-
-  leitor.readAsDataURL(arquivo);
+mostrarStatus(data);
 
 }
 
-function carregarTabela(){
+function mostrarStatus(data){
 
-  const tabela = document.getElementById("tabela");
+const el = document.getElementById(
+`status_${data}`
+);
 
-  tabela.innerHTML = "";
+el.innerText = "Salvo automaticamente";
 
-  DIAS.forEach(dataISO => {
+setTimeout(()=>{
 
-    const tr = document.createElement("tr");
+el.innerText = "";
 
-    let html = `
-      <td>${formatarData(dataISO)}</td>
-    `;
+},2000);
 
-    CAMPOS.forEach(campo => {
+}
 
-      const valor =
-        localStorage.getItem(
-          chave(campo, dataISO)
-        ) || "";
+function salvarFoto(data,input){
 
-      html += `
-        <td>
+const file = input.files[0];
 
-          <input
-            type="time"
-            value="${valor}"
-            onchange="
-              salvarCampo(
-                '${campo}',
-                '${dataISO}',
-                this.value
-              )
-            "
-          />
+if(!file) return;
 
-        </td>
-      `;
+const reader = new FileReader();
 
-    });
+reader.onload = function(e){
 
-    const foto =
-      localStorage.getItem(
-        chave("foto", dataISO)
-      );
+localStorage.setItem(
+chave("foto",data),
+e.target.result
+);
 
-    html += `
-      <td>
+document.getElementById(
+`preview_${data}`
+).innerHTML =
+`<img src="${e.target.result}" />`;
 
-        <input
-          type="file"
-          accept="image/*"
-          onchange="
-            salvarFoto(
-              '${dataISO}',
-              this
-            )
-          "
-        />
+mostrarStatus(data);
 
-        <div
-          class="preview"
-          id="preview_${dataISO}"
-        >
-          ${foto ? `<img src="${foto}" />` : ""}
-        </div>
+};
 
-      </td>
-    `;
+reader.readAsDataURL(file);
 
-    tr.innerHTML = html;
+}
 
-    tabela.appendChild(tr);
+function carregar(){
 
-  });
+const container =
+document.getElementById("container");
+
+container.innerHTML = "";
+
+DIAS.forEach(data=>{
+
+const card =
+document.createElement("div");
+
+card.className = "card";
+
+let html = `
+<div class="date">
+${formatarData(data)}
+</div>
+
+<div class="grid">
+`;
+
+CAMPOS.forEach(campo=>{
+
+const valor =
+localStorage.getItem(
+chave(campo.id,data)
+) || "";
+
+html += `
+<div class="box">
+
+<label>
+${campo.nome}
+</label>
+
+<input
+type="time"
+value="${valor}"
+onchange="
+salvar(
+'${campo.id}',
+'${data}',
+this.value
+)
+"
+/>
+
+</div>
+`;
+
+});
+
+html += `
+</div>
+
+<div class="photo-area">
+
+<div>
+Foto do ponto
+</div>
+
+<input
+type="file"
+accept="image/*"
+capture="environment"
+onchange="
+salvarFoto(
+'${data}',
+this
+)
+"
+/>
+
+<div
+class="preview"
+id="preview_${data}"
+>
+${
+localStorage.getItem(
+chave("foto",data)
+)
+?
+`<img src="${
+localStorage.getItem(
+chave("foto",data)
+)
+}" />`
+:
+""
+}
+</div>
+
+<div
+class="status"
+id="status_${data}"
+>
+</div>
+
+</div>
+`;
+
+card.innerHTML = html;
+
+container.appendChild(card);
+
+});
 
 }
 
 function exportarCSV(){
 
-  let linhas = [];
+let linhas = [];
 
-  linhas.push([
-    "Data",
-    "Entrada",
-    "Saida Almoco",
-    "Volta Almoco",
-    "Encerramento",
-    "Foto"
-  ]);
+linhas.push([
+"Data",
+"Entrada",
+"Saida",
+"Volta",
+"Fim"
+]);
 
-  DIAS.forEach(dataISO => {
+DIAS.forEach(data=>{
 
-    linhas.push([
+linhas.push([
 
-      formatarData(dataISO),
+formatarData(data),
 
-      localStorage.getItem(
-        chave("entrada", dataISO)
-      ) || "",
+localStorage.getItem(
+chave("entrada",data)
+) || "",
 
-      localStorage.getItem(
-        chave("saidaAlmoco", dataISO)
-      ) || "",
+localStorage.getItem(
+chave("saida",data)
+) || "",
 
-      localStorage.getItem(
-        chave("voltaAlmoco", dataISO)
-      ) || "",
+localStorage.getItem(
+chave("volta",data)
+) || "",
 
-      localStorage.getItem(
-        chave("encerramento", dataISO)
-      ) || "",
+localStorage.getItem(
+chave("fim",data)
+) || ""
 
-      localStorage.getItem(
-        chave("foto", dataISO)
-      ) ? "Sim" : "Não"
+]);
 
-    ]);
+});
 
-  });
+const csv = linhas
+.map(l=>l.join(";"))
+.join("\n");
 
-  const csv = linhas
-    .map(l => l.join(";"))
-    .join("\n");
+const blob = new Blob(
+[csv],
+{
+type:"text/csv"
+}
+);
 
-  const blob = new Blob(
-    [csv],
-    { type:"text/csv;charset=utf-8;" }
-  );
+const url =
+URL.createObjectURL(blob);
 
-  const url =
-    URL.createObjectURL(blob);
+const a =
+document.createElement("a");
 
-  const link =
-    document.createElement("a");
+a.href = url;
 
-  link.href = url;
+a.download =
+"ponto-mobile.csv";
 
-  link.download =
-    "controle-ponto-dark.csv";
+a.click();
 
-  link.click();
-
-  URL.revokeObjectURL(url);
+URL.revokeObjectURL(url);
 
 }
 
-function limparDados(){
+function limparTudo(){
 
-  const confirmar = confirm(
-    "Deseja apagar todos os dados?"
-  );
+const ok = confirm(
+"Apagar todos os dados?"
+);
 
-  if(!confirmar) return;
+if(!ok) return;
 
-  DIAS.forEach(dataISO => {
+localStorage.clear();
 
-    CAMPOS.forEach(campo => {
-
-      localStorage.removeItem(
-        chave(campo, dataISO)
-      );
-
-    });
-
-    localStorage.removeItem(
-      chave("foto", dataISO)
-    );
-
-  });
-
-  carregarTabela();
+carregar();
 
 }
 
-carregarTabela();
+let deferredPrompt;
+
+window.addEventListener(
+"beforeinstallprompt",
+(e)=>{
+
+e.preventDefault();
+
+deferredPrompt = e;
+
+document.getElementById(
+"installBox"
+).style.display = "block";
+
+}
+);
+
+async function instalarApp(){
+
+if(!deferredPrompt) return;
+
+deferredPrompt.prompt();
+
+const result =
+await deferredPrompt.userChoice;
+
+if(result.outcome === "accepted"){
+
+document.getElementById(
+"installBox"
+).style.display = "none";
+
+}
+
+}
+
+carregar();
 
 </script>
 
