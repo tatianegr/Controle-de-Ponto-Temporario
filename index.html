@@ -1,15 +1,28 @@
+<!-- ========================================= -->
+<!-- ARQUIVO: index.html -->
+<!-- ========================================= -->
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 
 <meta
 name="viewport"
-content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+content="width=device-width,initial-scale=1,viewport-fit=cover"
 />
 
 <title>Ponto Mobile</title>
+
+<meta name="theme-color" content="#020617"/>
+
+<link rel="manifest" href="manifest.json"/>
+
+<link
+rel="apple-touch-icon"
+href="icon-192.png"
+/>
 
 <style>
 
@@ -20,150 +33,283 @@ content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   -webkit-tap-highlight-color:transparent;
 }
 
+:root{
+
+  --bg:#020617;
+  --card:#0f172a;
+  --soft:#111827;
+
+  --border:#1e293b;
+
+  --primary:#38bdf8;
+
+  --text:#f8fafc;
+  --muted:#94a3b8;
+
+  --success:#10b981;
+
+}
+
 body{
-  background:#020617;
-  color:#f8fafc;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+
+  background:var(--bg);
+
+  color:var(--text);
+
+  font-family:
+  -apple-system,
+  BlinkMacSystemFont,
+  "SF Pro Display",
+  "Segoe UI",
+  sans-serif;
+
   min-height:100vh;
+
   padding-bottom:120px;
+
 }
 
 header{
+
   position:sticky;
   top:0;
   z-index:999;
-  background:rgba(2,6,23,.96);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid #1e293b;
-  padding:24px 20px;
+
+  background:rgba(2,6,23,.92);
+
+  backdrop-filter:blur(18px);
+
+  border-bottom:1px solid var(--border);
+
+  padding:
+  calc(env(safe-area-inset-top) + 18px)
+  20px
+  18px;
+
 }
 
 header h1{
-  color:#38bdf8;
-  font-size:30px;
-  font-weight:800;
+
+  font-size:34px;
+
+  font-weight:900;
+
+  color:var(--primary);
+
 }
 
 header p{
-  margin-top:6px;
-  color:#94a3b8;
+
+  margin-top:8px;
+
+  color:var(--muted);
+
   font-size:15px;
+
+}
+
+.install-btn{
+
+  margin-top:16px;
+
+  width:100%;
+
+  height:54px;
+
+  border:none;
+
+  border-radius:18px;
+
+  background:#10b981;
+
+  color:white;
+
+  font-size:16px;
+
+  font-weight:800;
+
 }
 
 .container{
+
+  width:100%;
+
+  max-width:650px;
+
+  margin:auto;
+
   padding:18px;
+
 }
 
-.card{
-  background:#0f172a;
-  border:1px solid #1e293b;
-  border-radius:28px;
+.day-card{
+
+  background:var(--card);
+
+  border:1px solid var(--border);
+
+  border-radius:30px;
+
   padding:22px;
+
+  margin-bottom:26px;
+
+}
+
+.day-title{
+
+  font-size:34px;
+
+  font-weight:900;
+
+  color:var(--primary);
+
   margin-bottom:24px;
-  box-shadow:0 20px 40px rgba(0,0,0,.45);
+
 }
 
-.date{
-  color:#38bdf8;
-  font-size:30px;
-  font-weight:800;
-  margin-bottom:22px;
-}
+.point-card{
 
-.time-grid{
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-}
+  background:var(--soft);
 
-.time-card{
-  background:#111827;
-  border:1px solid #1e293b;
+  border:1px solid var(--border);
+
   border-radius:24px;
+
   padding:18px;
+
+  margin-bottom:18px;
+
 }
 
-.time-card label{
-  display:block;
-  color:#94a3b8;
+.point-label{
+
+  color:var(--muted);
+
   margin-bottom:12px;
+
   font-size:15px;
+
 }
 
-.time-card input[type="time"]{
+.time-input{
+
   width:100%;
-  height:65px;
-  border:none;
-  border-radius:18px;
+
+  height:64px;
+
+  appearance:none;
+  -webkit-appearance:none;
+
   background:#020617;
-  color:white;
-  padding:0 18px;
-  font-size:28px;
-  font-weight:700;
-  outline:none;
+
   border:2px solid #1e293b;
+
+  border-radius:18px;
+
+  color:white;
+
+  font-size:28px;
+
+  font-weight:800;
+
+  padding:0 18px;
+
 }
 
-.photo-box{
+.photo-btn{
+
   margin-top:16px;
-  border:2px dashed #334155;
-  border-radius:20px;
-  padding:18px;
-  text-align:center;
-  background:#0b1220;
-}
 
-.photo-box small{
-  display:block;
-  margin-bottom:12px;
-  color:#94a3b8;
-  font-size:13px;
-}
-
-.photo-box input{
   width:100%;
-  color:#cbd5e1;
+
+  height:54px;
+
+  border:none;
+
+  border-radius:18px;
+
+  background:#1e293b;
+
+  color:white;
+
+  font-size:16px;
+
+  font-weight:700;
+
 }
 
 .preview{
+
   margin-top:14px;
+
 }
 
 .preview img{
+
   width:100%;
-  border-radius:18px;
-  max-height:240px;
+
+  border-radius:20px;
+
+  max-height:260px;
+
   object-fit:cover;
-  border:2px solid #1e293b;
+
 }
 
 .status{
-  margin-top:10px;
-  color:#10b981;
+
+  margin-top:12px;
+
+  color:var(--success);
+
+  text-align:center;
+
   font-size:13px;
+
 }
 
-.actions{
+.bottom-bar{
+
   position:fixed;
-  bottom:0;
+
   left:0;
-  width:100%;
-  background:rgba(15,23,42,.98);
-  border-top:1px solid #1e293b;
-  padding:14px;
+  right:0;
+  bottom:0;
+
+  background:rgba(15,23,42,.95);
+
+  border-top:1px solid var(--border);
+
+  padding:
+  14px
+  16px
+  calc(env(safe-area-inset-bottom) + 14px);
+
   display:flex;
+
   gap:12px;
-  backdrop-filter:blur(12px);
+
+  backdrop-filter:blur(20px);
+
 }
 
-button{
+.bottom-bar button{
+
   flex:1;
+
   height:58px;
+
   border:none;
+
   border-radius:20px;
+
   color:white;
+
   font-size:18px;
+
   font-weight:800;
+
 }
 
 .csv{
@@ -178,17 +324,8 @@ button{
   background:#dc2626;
 }
 
-button:active{
-  transform:scale(.97);
-}
-
-@media(min-width:900px){
-
-  .container{
-    max-width:700px;
-    margin:auto;
-  }
-
+.hidden{
+  display:none;
 }
 
 </style>
@@ -205,21 +342,40 @@ button:active{
 27/05/2026 até 09/06/2026
 </p>
 
+<button
+id="installButton"
+class="install-btn hidden"
+>
+Instalar App
+</button>
+
 </header>
 
-<div class="container" id="container"></div>
+<div
+class="container"
+id="container"
+></div>
 
-<div class="actions">
+<div class="bottom-bar">
 
-<button class="csv" onclick="exportarCSV()">
+<button
+class="csv"
+onclick="exportarCSV()"
+>
 CSV
 </button>
 
-<button class="pdf" onclick="window.print()">
+<button
+class="pdf"
+onclick="window.print()"
+>
 PDF
 </button>
 
-<button class="clear" onclick="limparTudo()">
+<button
+class="clear"
+onclick="limparTudo()"
+>
 Limpar
 </button>
 
@@ -227,17 +383,99 @@ Limpar
 
 <script>
 
+/* ====================================== */
+/* PWA */
+/* ====================================== */
+
+if("serviceWorker" in navigator){
+
+navigator.serviceWorker.register(
+"./service-worker.js"
+);
+
+}
+
+/* ====================================== */
+/* INSTALAR APP */
+/* ====================================== */
+
+let deferredPrompt;
+
+window.addEventListener(
+"beforeinstallprompt",
+(e)=>{
+
+e.preventDefault();
+
+deferredPrompt = e;
+
+document
+.getElementById("installButton")
+.classList.remove("hidden");
+
+}
+);
+
+document
+.getElementById("installButton")
+.addEventListener("click",async()=>{
+
+if(!deferredPrompt) return;
+
+deferredPrompt.prompt();
+
+});
+
+/* ====================================== */
+/* NOTIFICAÇÕES */
+/* ====================================== */
+
+async function pedirPermissao(){
+
+if(Notification.permission !== "granted"){
+
+await Notification.requestPermission();
+
+}
+
+}
+
+pedirPermissao();
+
+function notificar(titulo,msg){
+
+if(Notification.permission === "granted"){
+
+new Notification(titulo,{
+
+body:msg,
+icon:"icon-192.png"
+
+});
+
+}
+
+}
+
+/* ====================================== */
+/* DIAS */
+/* ====================================== */
+
 const DIAS = [
+
 "2026-05-27",
 "2026-05-28",
 "2026-05-29",
+
 "2026-06-01",
 "2026-06-02",
 "2026-06-03",
 "2026-06-04",
 "2026-06-05",
+
 "2026-06-08",
 "2026-06-09"
+
 ];
 
 const CAMPOS = [
@@ -266,7 +504,7 @@ nome:"Encerramento"
 
 function formatarData(data){
 
-const [ano, mes, dia] = data.split("-");
+const [ano,mes,dia] = data.split("-");
 
 return `${dia}/${mes}/${ano}`;
 
@@ -278,6 +516,10 @@ return `ponto_${tipo}_${data}`;
 
 }
 
+/* ====================================== */
+/* SALVAR HORÁRIO */
+/* ====================================== */
+
 function salvar(campo,data,valor){
 
 localStorage.setItem(
@@ -287,7 +529,42 @@ valor
 
 mostrarStatus(data,campo);
 
+notificar(
+"Ponto salvo ✅",
+`${campo} registrado`
+);
+
+/* ============================== */
+/* ALERTA ALMOÇO */
+/* ============================== */
+
+if(campo === "saida"){
+
+setTimeout(()=>{
+
+notificar(
+"Almoço ⏰",
+"Faltam 10 minutos para voltar"
+);
+
+},50 * 60 * 1000);
+
+setTimeout(()=>{
+
+notificar(
+"Almoço 🍽️",
+"Hora de voltar"
+);
+
+},60 * 60 * 1000);
+
 }
+
+}
+
+/* ====================================== */
+/* STATUS */
+/* ====================================== */
 
 function mostrarStatus(data,campo){
 
@@ -302,6 +579,16 @@ setTimeout(()=>{
 el.innerText = "";
 
 },1500);
+
+}
+
+/* ====================================== */
+/* FOTO */
+/* ====================================== */
+
+function abrirCamera(id){
+
+document.getElementById(id).click();
 
 }
 
@@ -327,11 +614,20 @@ document.getElementById(
 
 mostrarStatus(data,campo);
 
+notificar(
+"Foto salva 📸",
+`${campo} atualizado`
+);
+
 };
 
 reader.readAsDataURL(file);
 
 }
+
+/* ====================================== */
+/* RENDER */
+/* ====================================== */
 
 function carregar(){
 
@@ -345,14 +641,14 @@ DIAS.forEach(data=>{
 const card =
 document.createElement("div");
 
-card.className = "card";
+card.className = "day-card";
 
 let html = `
-<div class="date">
+
+<div class="day-title">
 ${formatarData(data)}
 </div>
 
-<div class="time-grid">
 `;
 
 CAMPOS.forEach(campo=>{
@@ -367,15 +663,19 @@ localStorage.getItem(
 chave(`foto_${campo.id}`,data)
 );
 
+const inputId =
+`file_${campo.id}_${data}`;
+
 html += `
 
-<div class="time-card">
+<div class="point-card">
 
-<label>
+<div class="point-label">
 ${campo.nome}
-</label>
+</div>
 
 <input
+class="time-input"
 type="time"
 value="${valor}"
 onchange="
@@ -387,13 +687,22 @@ this.value
 "
 />
 
-<div class="photo-box">
+<button
+class="photo-btn"
+onclick="
+abrirCamera(
+'${inputId}'
+)
+"
+>
 
-<small>
-Foto do ${campo.nome.toLowerCase()}
-</small>
+📸 Foto do ponto
+
+</button>
 
 <input
+id="${inputId}"
+class="hidden"
 type="file"
 accept="image/*"
 capture="environment"
@@ -410,7 +719,9 @@ this
 class="preview"
 id="preview_${campo.id}_${data}"
 >
+
 ${foto ? `<img src="${foto}" />` : ""}
+
 </div>
 
 <div
@@ -421,12 +732,9 @@ id="status_${campo.id}_${data}"
 
 </div>
 
-</div>
 `;
 
 });
-
-html += `</div>`;
 
 card.innerHTML = html;
 
@@ -435,6 +743,10 @@ container.appendChild(card);
 });
 
 }
+
+/* ====================================== */
+/* CSV */
+/* ====================================== */
 
 function exportarCSV(){
 
@@ -502,10 +814,14 @@ URL.revokeObjectURL(url);
 
 }
 
+/* ====================================== */
+/* LIMPAR */
+/* ====================================== */
+
 function limparTudo(){
 
 const ok = confirm(
-"Deseja apagar tudo?"
+"Apagar tudo?"
 );
 
 if(!ok) return;
