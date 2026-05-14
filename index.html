@@ -111,6 +111,53 @@ header p{
 
 }
 
+.day-navigation{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:14px;
+
+  margin-bottom:20px;
+
+}
+
+.day-navigation button{
+
+  width:52px;
+  height:52px;
+
+  border:none;
+
+  border-radius:18px;
+
+  background:#1e293b;
+
+  color:white;
+
+  font-size:22px;
+
+  font-weight:900;
+
+}
+
+#currentDate{
+
+  flex:1;
+
+  text-align:center;
+
+  font-size:24px;
+
+  font-weight:900;
+
+  color:#38bdf8;
+
+}
+
 .day-card{
 
   background:var(--card);
@@ -120,20 +167,6 @@ header p{
   border-radius:30px;
 
   padding:22px;
-
-  margin-bottom:26px;
-
-}
-
-.day-title{
-
-  font-size:34px;
-
-  font-weight:900;
-
-  color:var(--primary);
-
-  margin-bottom:24px;
 
 }
 
@@ -361,10 +394,27 @@ header p{
 
 </header>
 
-<div
-class="container"
-id="container"
-></div>
+<div class="container">
+
+<div class="day-navigation">
+
+<button onclick="diaAnterior()">
+◀
+</button>
+
+<div id="currentDate">
+27/05/2026
+</div>
+
+<button onclick="proximoDia()">
+▶
+</button>
+
+</div>
+
+<div id="container"></div>
+
+</div>
 
 <div class="bottom-bar">
 
@@ -392,40 +442,6 @@ Limpar
 </div>
 
 <script>
-
-if("serviceWorker" in navigator){
-
-navigator.serviceWorker.register(
-"./service-worker.js"
-);
-
-}
-
-async function pedirPermissao(){
-
-if(Notification.permission !== "granted"){
-
-await Notification.requestPermission();
-
-}
-
-}
-
-pedirPermissao();
-
-function notificar(titulo,msg){
-
-if(Notification.permission === "granted"){
-
-new Notification(titulo,{
-
-body:msg
-
-});
-
-}
-
-}
 
 const DIAS = [
 
@@ -467,6 +483,34 @@ nome:"Encerramento"
 }
 
 ];
+
+let indiceAtual = 0;
+
+async function pedirPermissao(){
+
+if(Notification.permission !== "granted"){
+
+await Notification.requestPermission();
+
+}
+
+}
+
+pedirPermissao();
+
+function notificar(titulo,msg){
+
+if(Notification.permission === "granted"){
+
+new Notification(titulo,{
+
+body:msg
+
+});
+
+}
+
+}
 
 function formatarData(data){
 
@@ -563,11 +607,6 @@ document.getElementById(
 `<img src="${e.target.result}" />`;
 
 mostrarStatus(data,campo);
-
-notificar(
-"Foto salva 📸",
-`${campo} atualizado`
-);
 
 };
 
@@ -672,18 +711,15 @@ Math.floor(
 / 1000
 );
 
-const formatado =
+document.getElementById(
+`timer_${data}`
+).innerText =
 
 `${String(horas).padStart(2,"0")}:${
 String(minutos).padStart(2,"0")
 }:${
 String(segundos).padStart(2,"0")
 }`;
-
-document.getElementById(
-`timer_${data}`
-).innerText =
-formatado;
 
 const meta =
 8 * 60 * 60 * 1000;
@@ -730,14 +766,18 @@ String(rs).padStart(2,"0")
 
 }
 
-function carregar(){
+function renderDia(){
+
+const data =
+DIAS[indiceAtual];
+
+document.getElementById(
+"currentDate"
+).innerText =
+formatarData(data);
 
 const container =
 document.getElementById("container");
-
-container.innerHTML = "";
-
-DIAS.forEach(data=>{
 
 const card =
 document.createElement("div");
@@ -745,10 +785,6 @@ document.createElement("div");
 card.className = "day-card";
 
 let html = `
-
-<div class="day-title">
-${formatarData(data)}
-</div>
 
 <div class="work-timer">
 
@@ -861,19 +897,43 @@ id="status_${campo.id}_${data}"
 
 card.innerHTML = html;
 
+container.innerHTML = "";
+
 container.appendChild(card);
 
-});
+atualizarTimer(data);
+
+}
+
+function proximoDia(){
+
+if(indiceAtual < DIAS.length - 1){
+
+indiceAtual++;
+
+renderDia();
+
+}
+
+}
+
+function diaAnterior(){
+
+if(indiceAtual > 0){
+
+indiceAtual--;
+
+renderDia();
+
+}
 
 }
 
 setInterval(()=>{
 
-DIAS.forEach(data=>{
-
-atualizarTimer(data);
-
-});
+atualizarTimer(
+DIAS[indiceAtual]
+);
 
 },1000);
 
@@ -951,72 +1011,31 @@ let html = `
 
 <head>
 
-<title>Relatório de Ponto</title>
+<title>Relatório</title>
 
 <style>
 
 body{
-
-font-family:Arial,sans-serif;
-
+font-family:Arial;
 padding:20px;
-
-}
-
-h1{
-
-text-align:center;
-
-margin-bottom:30px;
-
 }
 
 table{
-
 width:100%;
-
 border-collapse:collapse;
-
 font-size:12px;
-
 }
 
 th,td{
-
 border:1px solid #ccc;
-
 padding:8px;
-
 text-align:center;
-
-vertical-align:top;
-
-}
-
-th{
-
-background:#f3f4f6;
-
 }
 
 img{
-
-width:90px;
-
-height:90px;
-
+width:80px;
+height:80px;
 object-fit:cover;
-
-border-radius:10px;
-
-}
-
-.data{
-
-font-weight:bold;
-
-white-space:nowrap;
-
 }
 
 </style>
@@ -1040,13 +1059,13 @@ Relatório de Ponto
 <th>Entrada</th>
 <th>Foto</th>
 
-<th>Saída almoço</th>
+<th>Saída</th>
 <th>Foto</th>
 
-<th>Volta almoço</th>
+<th>Volta</th>
 <th>Foto</th>
 
-<th>Encerramento</th>
+<th>Fim</th>
 <th>Foto</th>
 
 </tr>
@@ -1059,105 +1078,97 @@ Relatório de Ponto
 
 DIAS.forEach(data=>{
 
-const entrada =
-localStorage.getItem(
-chave("entrada",data)
-) || "-";
-
-const saida =
-localStorage.getItem(
-chave("saida",data)
-) || "-";
-
-const volta =
-localStorage.getItem(
-chave("volta",data)
-) || "-";
-
-const fim =
-localStorage.getItem(
-chave("fim",data)
-) || "-";
-
-const fotoEntrada =
-localStorage.getItem(
-chave("foto_entrada",data)
-);
-
-const fotoSaida =
-localStorage.getItem(
-chave("foto_saida",data)
-);
-
-const fotoVolta =
-localStorage.getItem(
-chave("foto_volta",data)
-);
-
-const fotoFim =
-localStorage.getItem(
-chave("foto_fim",data)
-);
-
 html += `
 
 <tr>
 
-<td class="data">
+<td>
 ${formatarData(data)}
 </td>
 
 <td>
-${entrada}
+${localStorage.getItem(
+chave("entrada",data)
+) || "-"}
 </td>
 
 <td>
 ${
-fotoEntrada
+localStorage.getItem(
+chave("foto_entrada",data)
+)
 ?
-`<img src="${fotoEntrada}" />`
+`<img src="${
+localStorage.getItem(
+chave("foto_entrada",data)
+)
+}" />`
 :
 "-"
 }
 </td>
 
 <td>
-${saida}
+${localStorage.getItem(
+chave("saida",data)
+) || "-"}
 </td>
 
 <td>
 ${
-fotoSaida
+localStorage.getItem(
+chave("foto_saida",data)
+)
 ?
-`<img src="${fotoSaida}" />`
+`<img src="${
+localStorage.getItem(
+chave("foto_saida",data)
+)
+}" />`
 :
 "-"
 }
 </td>
 
 <td>
-${volta}
+${localStorage.getItem(
+chave("volta",data)
+) || "-"}
 </td>
 
 <td>
 ${
-fotoVolta
+localStorage.getItem(
+chave("foto_volta",data)
+)
 ?
-`<img src="${fotoVolta}" />`
+`<img src="${
+localStorage.getItem(
+chave("foto_volta",data)
+)
+}" />`
 :
 "-"
 }
 </td>
 
 <td>
-${fim}
+${localStorage.getItem(
+chave("fim",data)
+) || "-"}
 </td>
 
 <td>
 ${
-fotoFim
+localStorage.getItem(
+chave("foto_fim",data)
+)
 ?
-`<img src="${fotoFim}" />`
+`<img src="${
+localStorage.getItem(
+chave("foto_fim",data)
+)
+}" />`
 :
 "-"
 }
@@ -1181,7 +1192,8 @@ html += `
 
 `;
 
-const janela = window.open(
+const janela =
+window.open(
 "",
 "_blank"
 );
@@ -1189,8 +1201,6 @@ const janela = window.open(
 janela.document.write(html);
 
 janela.document.close();
-
-janela.focus();
 
 setTimeout(()=>{
 
@@ -1210,11 +1220,11 @@ if(!ok) return;
 
 localStorage.clear();
 
-carregar();
+renderDia();
 
 }
 
-carregar();
+renderDia();
 
 </script>
 
