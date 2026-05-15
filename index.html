@@ -606,7 +606,18 @@ document.getElementById(
 ).innerHTML =
 `<img src="${e.target.result}" />`;
 
+const jaTemHorario = localStorage.getItem(chave(campo,data));
+if(!jaTemHorario){
+const agora = new Date();
+const hh = String(agora.getHours()).padStart(2,'0');
+const mm = String(agora.getMinutes()).padStart(2,'0');
+const horarioAtual = `${hh}:${mm}`;
+const timeInput = document.getElementById(`time_${campo}_${data}`);
+if(timeInput) timeInput.value = horarioAtual;
+salvar(campo, data, horarioAtual);
+} else {
 mostrarStatus(data,campo);
+}
 
 };
 
@@ -834,6 +845,7 @@ ${campo.nome}
 </div>
 
 <input
+id="time_${campo.id}_${data}"
 class="time-input"
 type="time"
 value="${valor}"
