@@ -1014,32 +1014,7 @@ URL.revokeObjectURL(url);
 
 }
 
-async function gerarPDF(){
-
-const registros = DIAS.map(data=>({
-data,
-entrada: localStorage.getItem(chave("entrada",data)) || "",
-saida:   localStorage.getItem(chave("saida",data))   || "",
-volta:   localStorage.getItem(chave("volta",data))   || "",
-fim:     localStorage.getItem(chave("fim",data))     || ""
-}));
-
-const encoder = new TextEncoder();
-const buffer = await crypto.subtle.digest(
-"SHA-256",
-encoder.encode(JSON.stringify(registros))
-);
-const hashHex = Array.from(new Uint8Array(buffer))
-.map(b=>b.toString(16).padStart(2,"0"))
-.join("");
-
-const geradoEm = new Date().toLocaleString("pt-BR");
-
-const qrPayload = JSON.stringify({
-gerado: new Date().toISOString(),
-registros,
-hash: hashHex
-});
+function gerarPDF(){
 
 let html = `
 
@@ -1074,40 +1049,6 @@ height:80px;
 object-fit:cover;
 }
 
-.verificacao{
-margin-top:30px;
-border:2px solid #333;
-border-radius:8px;
-padding:16px;
-display:flex;
-gap:24px;
-align-items:flex-start;
-}
-
-.verificacao-texto{
-flex:1;
-}
-
-.verificacao h2{
-margin:0 0 8px;
-font-size:14px;
-}
-
-.hash{
-font-family:monospace;
-font-size:10px;
-word-break:break-all;
-background:#f5f5f5;
-padding:8px;
-border-radius:4px;
-margin-top:6px;
-}
-
-.gerado{
-font-size:11px;
-color:#555;
-margin-top:8px;
-}
 
 </style>
 
@@ -1257,32 +1198,6 @@ html += `
 
 </table>
 
-<div class="verificacao">
-
-<div class="verificacao-texto">
-<h2>✅ Verificação de Integridade</h2>
-<p style="font-size:12px;margin:0">
-Este relatório possui um código de verificação gerado a partir dos
-registros de ponto. Qualquer alteração nos horários invalida o código.
-Escaneie o QR Code para conferir os dados originais.
-</p>
-<div class="hash">SHA-256: ${hashHex}</div>
-<div class="gerado">Gerado em: ${geradoEm}</div>
-</div>
-
-<div id="qrcode"></div>
-
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
-<script>
-new QRCode(document.getElementById("qrcode"),{
-text: ${JSON.stringify(qrPayload)},
-width: 150,
-height: 150
-});
-<\/script>
-
 </body>
 
 </html>
@@ -1303,7 +1218,7 @@ setTimeout(()=>{
 
 janela.print();
 
-},1500);
+},500);
 
 }
 
